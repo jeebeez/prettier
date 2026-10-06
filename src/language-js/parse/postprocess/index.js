@@ -1,4 +1,5 @@
 import * as assert from "#universal/assert";
+import createError from "../../../common/parser-create-error.js";
 import { commentsPropertyInOptions } from "../../../constants.js";
 import {
   locEnd,
@@ -194,6 +195,21 @@ function postprocess(ast, options) {
             delete node.assertions;
           }
           break;
+
+        // `typescript-estree` silently drops `export` when it's not the first modifier
+        // https://github.com/prettier/prettier/issues/20166
+        case "ClassDeclaration":
+        case "FunctionDeclaration":
+        case "TSDeclareFunction":
+        case "VariableDeclaration":
+        case "TSEnumDeclaration":
+        case "TSModuleDeclaration":
+        case "TSInterfaceDeclaration":
+        case "TSTypeAliasDeclaration":
+          if (astType === "typescript") {
+            throwErrorForMisplacedExportModifier(node, text);
+          }
+          break;
       }
     },
     onLeave(node) {
@@ -219,6 +235,22 @@ function postprocess(ast, options) {
     assertComments(comments, text);
   }
   return ast;
+}
+
+const misplacedExportModifierRegex =
+  /(abstract|async|const|declare|default)\s+(?:(?:abstract|async|const|declare|default)\s+)*export\b/y;
+
+function throwErrorForMisplacedExportModifier(node, text) {
+  misplacedExportModifierRegex.lastIndex = locStart(node);
+  const match = misplacedExportModifierRegex.exec(text);
+  if (!match) {
+    return;
+  }
+
+  const { start } = node.loc;
+  throw createError(`'export' modifier must precede '${match[1]}' modifier.`, {
+    loc: { start: { line: start.line, column: start.column + 1 } },
+  });
 }
 
 function isUnbalancedLogicalTree(node) {
