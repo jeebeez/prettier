@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`abstract-export.ts format[babel-ts] 1`] = `
+"Unexpected token, expected "class" (1:10)
+> 1 | abstract export class A {}
+    |          ^
+  2 |
+Cause: Unexpected token, expected "class" (1:9)"
+`;
+
+exports[`abstract-export.ts format[oxc-ts] 1`] = `
+"'export' modifier must precede 'abstract' modifier. (1:10)
+> 1 | abstract export class A {}
+    |          ^^^^^^
+  2 |"
+`;
+
+exports[`abstract-export.ts format[typescript] 1`] = `
+"'export' modifier must precede 'abstract' modifier. (1:1)
+> 1 | abstract export class A {}
+    | ^
+  2 |"
+`;
+
+exports[`abstract-export.ts format[yuku-ts] 1`] = `
+"Expected a semicolon or an implicit semicolon after a statement, but found 'export' (1:10)
+> 1 | abstract export class A {}
+    |          ^^^^^^
+  2 |"
+`;
+
+exports[`declare-export.ts format[babel-ts] 1`] = `
+"Missing semicolon. (1:8)
+> 1 | declare export class A {}
+    |        ^
+  2 |
+Cause: Missing semicolon. (1:7)"
+`;
+
+exports[`declare-export.ts format[oxc-ts] 1`] = `
+"'export' modifier must precede 'declare' modifier. (1:9)
+> 1 | declare export class A {}
+    |         ^^^^^^
+  2 |"
+`;
+
+exports[`declare-export.ts format[typescript] 1`] = `
+"'export' modifier must precede 'declare' modifier. (1:1)
+> 1 | declare export class A {}
+    | ^
+  2 |"
+`;
+
+exports[`declare-export.ts format[yuku-ts] 1`] = `
+"Expected a semicolon or an implicit semicolon after a statement, but found 'export' (1:9)
+> 1 | declare export class A {}
+    |         ^^^^^^
+  2 |"
+`;
